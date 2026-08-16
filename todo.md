@@ -1,6 +1,6 @@
-# Player artwork replacement
+# GitHub repository push
 
-- [x] Stage and upload the supplied Suzume and Your Name artwork.
-- [x] Add song-specific artwork fields to the track records.
-- [x] Make the circular player artwork switch with the active song.
-- [x] Verify both artwork states, run typecheck/build, save a checkpoint, and deliver.
+- [ ] Inspect the target repository, current GitHub identity, and local project status.
+- [ ] Push the current AnimeWave project to the target repository.
+- [ ] Add or verify the user as a repository collaborator when the required GitHub username is available.
+- [ ] Verify the remote branch and report the repository result.
