@@ -2,7 +2,7 @@
  * Cinematic Amber Afterglow: scene-first composition, warm contrast, asymmetric calm,
  * quiet utility, frosted charcoal glass, expressive display type, tactile interactions.
  */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronDown,
   ChevronLeft,
@@ -32,21 +32,16 @@ type Track = {
   duration: string;
   cover: string;
   accent: string;
+  audio: string;
+  video: string;
 };
 
 const tracks: Track[] = [
-  { title: "Unravel", artist: "TK from Ling tosite sigure", anime: "Tokyo Ghoul", duration: "3:59", cover: "/manus-storage/animewave-hero_3f2f8bdd.png", accent: "#E58A4F" },
-  { title: "Again", artist: "YUI", anime: "Fullmetal Alchemist: Brotherhood", duration: "4:18", cover: "/manus-storage/animewave-dawn_cad9aecf.png", accent: "#F0B36A" },
-  { title: "Blue Bird", artist: "Ikimono-gakari", anime: "Naruto Shippuden", duration: "3:35", cover: "/manus-storage/animewave-night_269a9c1a.png", accent: "#97B7B1" },
-  { title: "Silhouette", artist: "KANA-BOON", anime: "Naruto Shippuden", duration: "4:02", cover: "/manus-storage/animewave-hero_3f2f8bdd.png", accent: "#D77A49" },
-  { title: "Kyouran Hey Kids!!", artist: "THE ORAL CIGARETTES", anime: "Noragami Aragoto", duration: "4:13", cover: "/manus-storage/animewave-dawn_cad9aecf.png", accent: "#E9C18F" },
+  { title: "Sparkle", artist: "RADWIMPS", anime: "Your Name", duration: "5:06", cover: "/manus-storage/animewave-hero_3f2f8bdd.png", accent: "#E58A4F", audio: "/manus-storage/sparkle_09599ca9.mp3", video: "/manus-storage/girl-chair_a1b36335.mp4" },
+  { title: "Suzume", artist: "RADWIMPS feat. Toaka", anime: "Suzume", duration: "4:12", cover: "/manus-storage/animewave-night_269a9c1a.png", accent: "#97B7B1", audio: "/manus-storage/suzume_38392dfd.mp3", video: "/manus-storage/boy-girl-outdoors_35637ad9.mp4" },
 ];
 
-const backgrounds = [
-  "/manus-storage/animewave-hero_3f2f8bdd.png",
-  "/manus-storage/animewave-dawn_cad9aec.png",
-  "/manus-storage/animewave-night_269a9c1a.png",
-];
+const fallbackPoster = "/manus-storage/animewave-hero_3f2f8bdd.png";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -54,11 +49,30 @@ export default function Home() {
   const [volume, setVolume] = useState(72);
   const [showQueue, setShowQueue] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [backgroundIndex, setBackgroundIndex] = useState(0);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const activeTrack = tracks[activeIndex];
   const filteredTracks = useMemo(() => tracks.filter((track) => `${track.title} ${track.anime} ${track.artist}`.toLowerCase().includes(query.toLowerCase())), [query]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    const video = videoRef.current;
+    if (!audio || !video) return;
+    audio.src = activeTrack.audio;
+    video.src = activeTrack.video;
+    audio.load();
+    video.load();
+    if (isPlaying) {
+      void audio.play().catch(() => setIsPlaying(false));
+      void video.play().catch(() => undefined);
+    }
+  }, [activeTrack, isPlaying]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume / 100;
+  }, [volume]);
 
   const selectTrack = (index: number) => {
     setActiveIndex(index);
@@ -66,12 +80,26 @@ export default function Home() {
     setShowQueue(false);
   };
 
+  const togglePlayback = () => {
+    const nextPlaying = !isPlaying;
+    setIsPlaying(nextPlaying);
+    if (nextPlaying) {
+      void audioRef.current?.play().catch(() => setIsPlaying(false));
+      void videoRef.current?.play().catch(() => undefined);
+    } else {
+      audioRef.current?.pause();
+      videoRef.current?.pause();
+    }
+  };
+
   const nextTrack = () => setActiveIndex((index) => (index + 1) % tracks.length);
   const previousTrack = () => setActiveIndex((index) => (index - 1 + tracks.length) % tracks.length);
 
   return (
     <main className="player-shell" style={{ "--accent": activeTrack.accent } as React.CSSProperties}>
-      <div className="backdrop" style={{ backgroundImage: `url(${backgrounds[backgroundIndex]})` }} />
+      <video ref={videoRef} className="backdrop-video" poster={fallbackPoster} muted loop playsInline aria-hidden="true" />
+      <audio ref={audioRef} onEnded={nextTrack} preload="metadata" />
+      <div className="backdrop" style={{ backgroundImage: `url(${fallbackPoster})` }} />
       <div className="backdrop-vignette" />
       <div className="grain" />
 
@@ -112,7 +140,7 @@ export default function Home() {
         <h1>Scenes<br /><em>in sound.</em></h1>
         <p className="hero-description">A quiet corner for opening themes, ending credits, and the songs that stay after the episode ends.</p>
         <div className="hero-actions">
-          <button className="primary-action" onClick={() => setIsPlaying((playing) => !playing)}>{isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />} {isPlaying ? "Pause room" : "Play the room"}</button>
+          <button className="primary-action" onClick={togglePlayback}>{isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />} {isPlaying ? "Pause room" : "Play the room"}</button>
           <button className="text-action" onClick={() => setShowQueue(true)}>Browse queue <ChevronRight size={16} /></button>
         </div>
       </section>
@@ -127,11 +155,11 @@ export default function Home() {
 
       <section className="player-bar glass-panel" aria-label="Audio player">
         <div className="track-info"><div className="cover-wrap"><img src={activeTrack.cover} alt={`${activeTrack.title} artwork`} /><span className="cover-glint" /></div><div className="track-copy"><span className="now-playing-label">NOW PLAYING</span><strong>{activeTrack.title}</strong><small>{activeTrack.artist}</small></div><button className={`heart-button ${isLiked ? "liked" : ""}`} aria-label="Like track" onClick={() => setIsLiked((liked) => !liked)}><Heart size={18} fill={isLiked ? "currentColor" : "none"} /></button></div>
-        <div className="transport"><div className="transport-buttons"><button className="transport-button hide-mobile" aria-label="Shuffle"><Shuffle size={16} /></button><button className="transport-button" aria-label="Previous track" onClick={previousTrack}><SkipBack size={18} fill="currentColor" /></button><button className="main-play" aria-label={isPlaying ? "Pause" : "Play"} onClick={() => setIsPlaying((playing) => !playing)}>{isPlaying ? <Pause size={19} fill="currentColor" /> : <Play size={19} fill="currentColor" />}</button><button className="transport-button" aria-label="Next track" onClick={nextTrack}><SkipForward size={18} fill="currentColor" /></button><button className="transport-button hide-mobile" aria-label="Repeat"><Repeat2 size={16} /></button></div><div className="progress-row"><span>0:00</span><div className="progress-track"><span style={{ width: isPlaying ? "38%" : "9%" }} /></div><span>{activeTrack.duration}</span></div></div>
+        <div className="transport"><div className="transport-buttons"><button className="transport-button hide-mobile" aria-label="Shuffle"><Shuffle size={16} /></button><button className="transport-button" aria-label="Previous track" onClick={previousTrack}><SkipBack size={18} fill="currentColor" /></button><button className="main-play" aria-label={isPlaying ? "Pause" : "Play"} onClick={togglePlayback}>{isPlaying ? <Pause size={19} fill="currentColor" /> : <Play size={19} fill="currentColor" />}</button><button className="transport-button" aria-label="Next track" onClick={nextTrack}><SkipForward size={18} fill="currentColor" /></button><button className="transport-button hide-mobile" aria-label="Repeat"><Repeat2 size={16} /></button></div><div className="progress-row"><span>0:00</span><div className="progress-track"><span style={{ width: isPlaying ? "38%" : "9%" }} /></div><span>{activeTrack.duration}</span></div></div>
         <div className="player-tools"><div className="volume-control"><Volume2 size={16} /><input aria-label="Volume" type="range" min="0" max="100" value={volume} onChange={(event) => setVolume(Number(event.target.value))} style={{ "--range-progress": `${volume}%` } as React.CSSProperties} /></div><button className="queue-toggle" aria-label="Toggle queue" onClick={() => setShowQueue((open) => !open)}><Menu size={18} /></button><button className="more-button" aria-label="More options"><MoreHorizontal size={19} /></button></div>
       </section>
 
-      <div className="background-switcher" aria-label="Background scene selector">{backgrounds.map((_, index) => <button key={index} className={index === backgroundIndex ? "active" : ""} aria-label={`Show background ${index + 1}`} onClick={() => setBackgroundIndex(index)} />)}</div>
+      <div className="media-status"><span className={isPlaying ? "media-status-dot playing" : "media-status-dot"} /> VIDEO / {activeTrack.title.toUpperCase()}</div>
       <div className="footer-note">A small, student-built radio for anime songs <span>·</span> made with feeling</div>
     </main>
   );
