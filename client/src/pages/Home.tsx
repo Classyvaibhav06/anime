@@ -15,8 +15,8 @@ type Track = {
 };
 
 const tracks: Track[] = [
-  { title: "Suzume", artist: "RADWIMPS feat. Toaka", anime: "Suzume", duration: "4:12", audio: "/manus-storage/suzume_38392dfd.mp3", video: "/manus-storage/boy-girl-outdoors_35637ad9.mp4" },
-  { title: "Sparkle", artist: "RADWIMPS", anime: "Your Name", duration: "5:06", audio: "/manus-storage/sparkle_09599ca9.mp3", video: "/manus-storage/girl-chair_a1b36335.mp4" },
+  { title: "Suzume", artist: "RADWIMPS feat. Toaka", anime: "Suzume", duration: "4:12", audio: "/manus-storage/suzume_38392dfd.mp3", video: "/manus-storage/girl-chair_a1b36335.mp4" },
+  { title: "Sparkle", artist: "RADWIMPS", anime: "Your Name", duration: "5:06", audio: "/manus-storage/sparkle_09599ca9.mp3", video: "/manus-storage/boy-girl-outdoors_35637ad9.mp4" },
 ];
 
 export default function Home() {

@@ -1,6 +1,6 @@
-# Mobile player layout fix
+# Song sequence correction
 
-- [x] Inspect the current narrow-screen player rules and identify the positioning conflict.
-- [x] Create a dedicated phone layout with safe bottom spacing, readable metadata, and aligned controls.
-- [x] Preserve the desktop reference-style pill unchanged.
-- [x] Verify phone and desktop screenshots, then run typecheck/build and save a checkpoint.
+- [x] Audit the current order of titles, artists, MP3 sources, and MP4 backgrounds.
+- [x] Set the intended song sequence and keep each song's metadata/audio/video in one track object.
+- [x] Verify the title, artist, audio, and background stay synchronized on next/previous switching.
+- [x] Run typecheck/build, save a checkpoint, and deliver the corrected project.
