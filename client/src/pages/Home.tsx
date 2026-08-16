@@ -12,11 +12,12 @@ type Track = {
   duration: string;
   audio: string;
   video: string;
+  cover: string;
 };
 
 const tracks: Track[] = [
-  { title: "Suzume", artist: "RADWIMPS feat. Toaka", anime: "Suzume", duration: "4:12", audio: "/manus-storage/suzume_38392dfd.mp3", video: "/manus-storage/girl-chair_a1b36335.mp4" },
-  { title: "Sparkle", artist: "RADWIMPS", anime: "Your Name", duration: "5:06", audio: "/manus-storage/sparkle_09599ca9.mp3", video: "/manus-storage/boy-girl-outdoors_35637ad9.mp4" },
+  { title: "Suzume", artist: "RADWIMPS feat. Toaka", anime: "Suzume", duration: "4:12", audio: "/manus-storage/suzume_38392dfd.mp3", video: "/manus-storage/girl-chair_a1b36335.mp4", cover: "/manus-storage/suzume-cover_5ba648db.png" },
+  { title: "Sparkle", artist: "RADWIMPS", anime: "Your Name", duration: "5:06", audio: "/manus-storage/sparkle_09599ca9.mp3", video: "/manus-storage/boy-girl-outdoors_35637ad9.mp4", cover: "/manus-storage/your-name-cover_59a9f746.png" },
 ];
 
 export default function Home() {
@@ -110,7 +111,7 @@ export default function Home() {
       <div className="radio-rule" />
 
       <section className="radio-player" aria-label="Audio player">
-        <div className="radio-track-identity"><div className="radio-disc"><span /></div><div className="radio-track-copy"><strong>{activeTrack.title}</strong><small>{activeTrack.artist}</small><div className="radio-progress"><span>{formatTime(elapsed)}</span><input aria-label="Seek track" type="range" min="0" max={Math.max(audioRef.current?.duration || 0, 1)} value={Math.min(elapsed, audioRef.current?.duration || 1)} onChange={(event) => { const value = Number(event.target.value); if (audioRef.current) audioRef.current.currentTime = value; setElapsed(value); }} /><span>{activeTrack.duration}</span></div></div></div>
+        <div className="radio-track-identity"><div className="radio-disc" style={{ backgroundImage: `url(${activeTrack.cover})` }}><span /></div><div className="radio-track-copy"><strong>{activeTrack.title}</strong><small>{activeTrack.artist}</small><div className="radio-progress"><span>{formatTime(elapsed)}</span><input aria-label="Seek track" type="range" min="0" max={Math.max(audioRef.current?.duration || 0, 1)} value={Math.min(elapsed, audioRef.current?.duration || 1)} onChange={(event) => { const value = Number(event.target.value); if (audioRef.current) audioRef.current.currentTime = value; setElapsed(value); }} /><span>{activeTrack.duration}</span></div></div></div>
         <div className="radio-transport"><button aria-label="Previous song" onClick={previousTrack}><SkipBack size={17} fill="currentColor" /></button><button aria-label={isPlaying ? "Pause" : "Play"} onClick={togglePlayback} className="radio-play">{isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}</button><button aria-label="Next song" onClick={nextTrack}><SkipForward size={17} fill="currentColor" /></button></div>
       </section>
 

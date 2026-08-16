@@ -1,6 +1,6 @@
-# Song sequence correction
+# Player artwork replacement
 
-- [x] Audit the current order of titles, artists, MP3 sources, and MP4 backgrounds.
-- [x] Set the intended song sequence and keep each song's metadata/audio/video in one track object.
-- [x] Verify the title, artist, audio, and background stay synchronized on next/previous switching.
-- [x] Run typecheck/build, save a checkpoint, and deliver the corrected project.
+- [x] Stage and upload the supplied Suzume and Your Name artwork.
+- [x] Add song-specific artwork fields to the track records.
+- [x] Make the circular player artwork switch with the active song.
+- [x] Verify both artwork states, run typecheck/build, save a checkpoint, and deliver.
