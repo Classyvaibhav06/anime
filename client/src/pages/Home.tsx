@@ -97,9 +97,8 @@ export default function Home() {
 
   return (
     <main className="player-shell" style={{ "--accent": activeTrack.accent } as React.CSSProperties}>
-      <video ref={videoRef} className="backdrop-video" poster={fallbackPoster} muted loop playsInline aria-hidden="true" />
-      <audio ref={audioRef} onEnded={nextTrack} preload="metadata" />
-      <div className="backdrop" style={{ backgroundImage: `url(${fallbackPoster})` }} />
+      <video key={activeTrack.video} ref={videoRef} className="backdrop-video" src={activeTrack.video} muted autoPlay loop playsInline aria-hidden="true" />
+      <audio key={activeTrack.audio} ref={audioRef} src={activeTrack.audio} onEnded={nextTrack} preload="metadata" />
       <div className="backdrop-vignette" />
       <div className="grain" />
 
