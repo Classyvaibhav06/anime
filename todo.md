@@ -1,6 +1,6 @@
-# Reference-style floating player revision
+# Mobile player layout fix
 
-- [x] Replace the full-width bottom player with a compact centered pill matching the reference proportions.
-- [x] Structure the pill with circular artwork, title/artist/progress on the left, and previous/play/next controls on the right.
-- [x] Preserve the real MP3 playback, progress seeking, and paired video switching.
-- [x] Verify desktop and mobile sizing/position, then run typecheck/build and save a checkpoint.
+- [x] Inspect the current narrow-screen player rules and identify the positioning conflict.
+- [x] Create a dedicated phone layout with safe bottom spacing, readable metadata, and aligned controls.
+- [x] Preserve the desktop reference-style pill unchanged.
+- [x] Verify phone and desktop screenshots, then run typecheck/build and save a checkpoint.
