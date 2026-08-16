@@ -1,7 +1,6 @@
-# SUZUME RADIO layout revision
+# Reference-style floating player revision
 
-- [x] Replace the current hero and queue composition with the sparse reference layout.
-- [x] Keep the supplied MP4 background layer and MP3 playback integration intact.
-- [x] Add the top utility row, announcement card, listener pill, centered title, right-side cue, and bottom player arrangement.
-- [x] Make the bottom player show real track metadata, progress, and transport controls without the old queue panel.
-- [x] Verify desktop and mobile rendering, then run typecheck/build and save a checkpoint.
+- [x] Replace the full-width bottom player with a compact centered pill matching the reference proportions.
+- [x] Structure the pill with circular artwork, title/artist/progress on the left, and previous/play/next controls on the right.
+- [x] Preserve the real MP3 playback, progress seeking, and paired video switching.
+- [x] Verify desktop and mobile sizing/position, then run typecheck/build and save a checkpoint.
